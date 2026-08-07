@@ -60,7 +60,9 @@ powershell -ExecutionPolicy Bypass -File token-optimizer\install.ps1
 *Why `git clone` instead of `irm | iex`? Security guardrails flag downloading and executing remote code without verification as a supply chain risk. The clone approach lets you inspect `install.ps1` before running it.*
 
 ### Post-Install Configuration
-If you used the Manual Install, the setup script will output a JSON snippet. Add it to your `mcp.json` or MCP client config:
+
+#### Claude Desktop / Antigravity
+If you used the Manual Install, the setup script will output a JSON snippet. Add it to your `claude_desktop_config.json` or `mcp_config.json`:
 
 ```json
 {
@@ -75,6 +77,14 @@ If you used the Manual Install, the setup script will output a JSON snippet. Add
   }
 }
 ```
+
+#### Cursor IDE
+1. Open Cursor Settings > **Features** > **MCP**
+2. Click **+ Add New MCP Server**
+3. **Name**: `token-optimizer`
+4. **Type**: `command`
+5. **Command**: `/path/to/token-optimizer/venv/bin/python` *(The install script will provide your exact path)*
+6. **Args**: `-m token_optimizer.server`
 
 ---
 

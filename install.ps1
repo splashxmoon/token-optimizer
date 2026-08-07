@@ -42,3 +42,14 @@ Write-Host @"
   }
 }
 "@
+
+Write-Host ""
+Write-Host "=================================================" -ForegroundColor Green
+Write-Host "Cursor IDE Installation:" -ForegroundColor Cyan
+Write-Host "1. Go to Cursor Settings > Features > MCP"
+Write-Host "2. Click '+ Add New MCP Server'"
+Write-Host "3. Name: token-optimizer"
+Write-Host "4. Type: command"
+Write-Host "5. Command: $venvPath"
+Write-Host "6. Args: -m token_optimizer.server"
+Write-Host "=================================================" -ForegroundColor Green

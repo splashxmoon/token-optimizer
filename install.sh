@@ -42,3 +42,14 @@ cat << EOF
   }
 }
 EOF
+
+echo ""
+echo "================================================="
+echo "Cursor IDE Installation:"
+echo "1. Go to Cursor Settings > Features > MCP"
+echo "2. Click '+ Add New MCP Server'"
+echo "3. Name: token-optimizer"
+echo "4. Type: command"
+echo "5. Command: $VENV_PATH"
+echo "6. Args: -m token_optimizer.server"
+echo "================================================="
