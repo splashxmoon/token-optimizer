@@ -69,6 +69,13 @@ def extract_skeleton(file_path: str, language: Optional[str] = None) -> str:
             body_node = get_body_node(node)
             if body_node:
                 nodes_to_strip.append(body_node)
+        # Ultra Token Savings: Strip comments and docstrings
+        elif node.type in ('comment', 'line_comment', 'block_comment'):
+            nodes_to_strip.append(node)
+        elif language == 'python' and node.type == 'expression_statement':
+            if len(node.children) == 1 and node.children[0].type == 'string':
+                nodes_to_strip.append(node)
+                
         for child in node.children:
             walk(child)
             
@@ -152,7 +159,7 @@ def extract_symbol(file_path: str, symbol_name: str, language: Optional[str] = N
     
     return source_code[best_node.start_byte:best_node.end_byte].decode('utf-8', errors='replace')
 
-def exec_smart(command: str, max_error_lines: int = 50) -> str:
+def exec_smart(command: str, max_error_lines: int = 30) -> str:
     try:
         process = subprocess.run(
             command,
@@ -181,7 +188,7 @@ def read_diff(file_path: Optional[str] = None) -> str:
         # Check if we are in a git repo
         subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], check=True, capture_output=True)
         
-        cmd = ["git", "diff", "HEAD"]
+        cmd = ["git", "diff", "-U1", "HEAD"]
         if file_path:
             cmd.extend(["--", file_path])
             
