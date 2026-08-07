@@ -42,7 +42,7 @@ def inject_config(venv_python_path: str):
     try:
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
-        print(f"✅ Successfully injected token-optimizer into Claude Desktop config!")
+        print(f"[SUCCESS] Successfully injected token-optimizer into Claude Desktop config!")
         print(f"   ({config_path})")
     except Exception as e:
         print(f"Error: Could not write to config file: {e}")
