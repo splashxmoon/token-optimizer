@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 def guess_language(file_path: str) -> str:
+    """Guess the programming language of a file based on its extension."""
     ext = Path(file_path).suffix.lower()
     mapping = {
         '.py': 'python',
@@ -23,6 +24,7 @@ def guess_language(file_path: str) -> str:
     return mapping.get(ext, 'python')
 
 def get_ast_parser(language: str):
+    """Dynamically load and return a tree-sitter parser for the given language."""
     try:
         from tree_sitter_languages import get_parser
         return get_parser(language)
@@ -30,6 +32,7 @@ def get_ast_parser(language: str):
         raise RuntimeError("tree-sitter-languages is not installed.")
 
 def get_body_node(node):
+    """Find and return the main body block of a function or class node."""
     body = node.child_by_field_name('body')
     if body:
         return body
@@ -41,6 +44,10 @@ def get_body_node(node):
     return None
 
 def extract_skeleton(file_path: str, language: Optional[str] = None) -> str:
+    """
+    Reads a file and returns its structural skeleton by stripping out function/method implementation bodies, 
+    comments, and docstrings using AST parsing.
+    """
     if not os.path.exists(file_path):
         return f"Error: File {file_path} not found."
     
@@ -109,6 +116,7 @@ def extract_skeleton(file_path: str, language: Optional[str] = None) -> str:
     return result.decode('utf-8', errors='replace')
 
 def get_symbol_name(node) -> Optional[str]:
+    """Attempt to extract the name identifier of a given AST definition node."""
     name_node = node.child_by_field_name('name')
     if name_node:
         return name_node.text.decode('utf-8', errors='ignore')
@@ -119,6 +127,10 @@ def get_symbol_name(node) -> Optional[str]:
     return None
 
 def extract_symbol(file_path: str, symbol_name: str, language: Optional[str] = None) -> str:
+    """
+    Searches the AST of a file for a specific function, class, or variable definition and returns 
+    only that specific block of code.
+    """
     if not os.path.exists(file_path):
         return f"Error: File {file_path} not found."
         
@@ -160,6 +172,10 @@ def extract_symbol(file_path: str, symbol_name: str, language: Optional[str] = N
     return source_code[best_node.start_byte:best_node.end_byte].decode('utf-8', errors='replace')
 
 def exec_smart(command: str, max_error_lines: int = 30) -> str:
+    """
+    Executes a shell command. If successful, strips the output to save tokens. 
+    If it fails, returns only the final `max_error_lines` of the stack trace.
+    """
     try:
         process = subprocess.run(
             command,
@@ -184,6 +200,10 @@ def exec_smart(command: str, max_error_lines: int = 30) -> str:
         return f"Failed to execute command: {e}"
 
 def read_diff(file_path: Optional[str] = None) -> str:
+    """
+    Returns a unified git diff (with 1 line of context) for uncommitted changes.
+    Can be restricted to a specific file.
+    """
     try:
         # Check if we are in a git repo
         subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], check=True, capture_output=True)
