@@ -24,14 +24,33 @@ Because LLMs re-process the entire conversation history (context window) on ever
 - **Single Function Read:** 1,662 tokens ➡️ 544 tokens (**67.3% Reduction**)
 - **Terminal Execution:** 745 tokens ➡️ 18 tokens (**97.6% Reduction**)
 
-### Cumulative Session Savings (Compounding Context)
-| Session Length | Standard Billed Tokens | Optimized Billed Tokens | Total Tokens Saved |
-|---|---|---|---|
-| **Short (5 Turns)** | 20,550 | 4,680 | **15,870 (77.2%)** |
-| **Medium (15 Turns)** | 158,800 | 37,840 | **120,960 (76.2%)** |
-| **Long (30 Turns)** | 609,750 | 147,000 | **462,750 (75.9%)** |
+### Cumulative Session Cost & Token Savings
+Because LLMs re-process the entire context window on *every single turn*, saving tokens early compounds massively. We simulated 100-turn development sessions across three standard personas using an average LLM input cost of $3.00 per 1M tokens.
 
-> *In a Long Session (30 turns), the standard agent's context window bloats to 39,000 tokens, causing slow response times and high costs. With Token Optimizer, the context window stays at a lean 9,360 tokens!*
+**🚨 Without Token Optimizer, long sessions quickly breach the 200k token limit of models like Claude 3.5 Sonnet, causing memory crashes and extreme latency.**
+
+#### 🕵️ The Explorer (Heavy Codebase Reading)
+| Session Length | Standard Cost | Optimized Cost | Context Window | Savings |
+|---|---|---|---|---|
+| 10 Turns | $0.53 | $0.05 | 32k ➡️ 3k tokens | **89.2%** |
+| 50 Turns | $12.26 | $1.34 | 160k ➡️ 17k tokens | **88.9%** |
+| 100 Turns | $48.51 | **$5.35** | 320k ➡️ 35k tokens | **88.9%** |
+
+#### 🐛 The Debugger (Heavy Test Running & Error Traces)
+| Session Length | Standard Cost | Optimized Cost | Context Window | Savings |
+|---|---|---|---|---|
+| 10 Turns | $1.53 | $0.09 | 88k ➡️ 5k tokens | **93.9%** |
+| 50 Turns | $33.39 | $2.11 | 431k ➡️ 27k tokens | **93.6%** |
+| 100 Turns | $131.09 | **$8.35** | 857k ➡️ 55k tokens | **93.6%** |
+
+#### 💻 The Developer (Balanced Edit/Diff/Test)
+| Session Length | Standard Cost | Optimized Cost | Context Window | Savings |
+|---|---|---|---|---|
+| 10 Turns | $0.58 | $0.06 | 43k ➡️ 4k tokens | **89.3%** |
+| 50 Turns | $16.00 | $1.52 | 218k ➡️ 20k tokens | **90.4%** |
+| 100 Turns | $64.70 | **$6.07** | 436k ➡️ 40k tokens | **90.6%** |
+
+> *A standard LLM crashes at ~50 turns for a Debugger because the context hits 431,000 tokens. With Token Optimizer, the context stays at a lean 27,000 tokens, allowing infinite debugging loops!*
 
 ---
 
