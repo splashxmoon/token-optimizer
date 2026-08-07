@@ -19,7 +19,7 @@
 
 Because LLMs re-process the entire conversation history (context window) on every turn, saving tokens compounds massively over time. We simulated typical development sessions (Read Code -> Run Test -> Edit -> Run Test) to measure cumulative billed tokens.
 
-### Single-Turn Savings (Using `tiktoken`)
+### Single-Turn Savings
 - **File Structure Read:** 1,662 tokens ➡️ 157 tokens (**90.6% Reduction**)
 - **Single Function Read:** 1,662 tokens ➡️ 544 tokens (**67.3% Reduction**)
 - **Terminal Execution:** 745 tokens ➡️ 18 tokens (**97.6% Reduction**)
