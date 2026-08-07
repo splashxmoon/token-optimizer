@@ -29,6 +29,9 @@ echo "To use this MCP server, add the following to your MCP client config (e.g.,
 
 VENV_PATH="$(pwd)/venv/bin/python"
 
+echo "Injecting configuration into Claude Desktop..."
+$VENV_PATH inject_claude_config.py "$VENV_PATH"
+
 cat << EOF
 {
   "mcpServers": {

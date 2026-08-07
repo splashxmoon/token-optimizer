@@ -26,7 +26,10 @@ Write-Host ""
 
 $venvPath = (Resolve-Path ".\venv\Scripts\python.exe").Path
 # Escape backslashes for JSON
-$venvPathJson = $venvPath -replace '\\', '\\'
+$venvPathJson = $venvPath -replace '\\', '\\\\'
+
+Write-Host "Injecting configuration into Claude Desktop..." -ForegroundColor Cyan
+& $venvPath .\inject_claude_config.py $venvPath
 
 Write-Host "To use this MCP server, add the following to your MCP client config (e.g., mcp.json, Claude config):" -ForegroundColor Cyan
 Write-Host @"

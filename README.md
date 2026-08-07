@@ -11,7 +11,7 @@
 ## ✨ Key Features
 
 - 🏗️ **AST Skeletonization:** Uses `tree-sitter` to parse code and strip implementation bodies, returning only structural outlines (imports, classes, signatures). **Saves up to 90% tokens.**
-- 🎯 **Precision Symbol Extraction:** Fetch *only* the specific function, class, or interface you need to edit without loading the entire file into context. **Saves up to 75% tokens.**
+- 🎯 **Precision Symbol Extraction:** Fetch *only* the specific function, class, or type definition block from a file. **Saves up to 75% tokens.**
 - 🔇 **Terminal Log Distillation:** Automatically intercepts passing test suites and builds, stripping verbose `stdout` logs and returning a compact success summary. Retains error traces on failure. **Saves up to 97% tokens.**
 - 🔄 **Git Diff Deduplication:** Verifies recent file modifications using `git diff` instead of re-reading full files into the context window.
 
@@ -44,46 +44,38 @@ Because LLMs re-process the entire conversation history (context window) on ever
 /plugin marketplace add splashxmoon/token-optimizer
 /plugin install token-optimizer@splashxmoon-token-optimizer
 ```
-*Note: No global Python packages or PATH shims are created. The installation is isolated within your client.*
 
 ### Manual Install (Unix / macOS / Linux)
 ```bash
 git clone --depth 1 https://github.com/splashxmoon/token-optimizer.git
-bash token-optimizer/install.sh
+cd token-optimizer
+bash install.sh
 ```
 
 ### Windows (PowerShell)
 ```powershell
 git clone --depth 1 https://github.com/splashxmoon/token-optimizer.git
-powershell -ExecutionPolicy Bypass -File token-optimizer\install.ps1
+cd token-optimizer
+powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 *Why `git clone` instead of `irm | iex`? Security guardrails flag downloading and executing remote code without verification as a supply chain risk. The clone approach lets you inspect `install.ps1` before running it.*
 
-### Post-Install Configuration
+---
 
-#### Claude Desktop / Antigravity
-If you used the Manual Install, the setup script will output a JSON snippet. Add it to your `claude_desktop_config.json` or `mcp_config.json`:
+## ⚙️ Post-Install Configuration
 
-```json
-{
-  "mcpServers": {
-    "token-optimizer": {
-      "command": "/path/to/token-optimizer/venv/bin/python",
-      "args": [
-        "-m",
-        "token_optimizer.server"
-      ]
-    }
-  }
-}
-```
+The manual installation script automatically sets up a clean Python virtual environment (`venv`) and **automatically injects the server configuration directly into your `claude_desktop_config.json`**. 
 
-#### Cursor IDE
+**Zero manual configuration required!** 
+
+*(Note: If you are using an alternative client like Cursor, the script will also print out the exact configuration block and UI steps for you to copy/paste).*
+
+#### Cursor IDE Configuration
 1. Open Cursor Settings > **Features** > **MCP**
 2. Click **+ Add New MCP Server**
 3. **Name**: `token-optimizer`
 4. **Type**: `command`
-5. **Command**: `/path/to/token-optimizer/venv/bin/python` *(The install script will provide your exact path)*
+5. **Command**: `/path/to/token-optimizer/venv/bin/python` *(The install script will provide your exact absolute path)*
 6. **Args**: `-m token_optimizer.server`
 
 ---
@@ -100,7 +92,7 @@ Extracts ONLY the specified function, class, or type definition block from a fil
 
 ### `exec_smart`
 Executes a shell command (test runner, compiler, linter) and automatically strips passing output, returning ONLY failure stack traces, exit codes, and error lines.
-- **Args:** `command` (string), `max_error_lines` (optional int, default 50)
+- **Args:** `command` (string), `max_error_lines` (optional int, default 30)
 
 ### `read_diff`
 Returns a compact git patch/diff of uncommitted edits for a specific file or repository working tree instead of re-reading full files into context.
