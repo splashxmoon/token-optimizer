@@ -27,7 +27,7 @@ echo "================================================="
 echo ""
 echo "To use this MCP server, add the following to your MCP client config (e.g., mcp.json, Claude config):"
 
-VENV_PATH=$(readlink -f ./venv/bin/python)
+VENV_PATH="$(pwd)/venv/bin/python"
 
 cat << EOF
 {
